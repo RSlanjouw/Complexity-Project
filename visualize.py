@@ -4,7 +4,7 @@ from matplotlib.animation import FuncAnimation
 from IPython.display import HTML
 from scipy.ndimage import label
 
-from modules.grid_update import update_grid_withpolice
+from modules.grid_update import update_grid_withpolice, update_grid_nopolice
 # Define parameters
 
 grid_size = (300, 300)
@@ -24,14 +24,14 @@ police_units = 15 # Define the number of available police units
 
 def animate(t): # Define function to use in FuncAnimation (update grid for every timestep)
     global criminality
-    criminality, mask = update_grid_withpolice(criminality, education, income, influence_diff, police_threshold, police_effect, redistribution_frac, police_units)
+    criminality = update_grid_nopolice(criminality, education, income, influence_diff)
     # Save the layer with the criminality levels
     cax.set_array(criminality)
     # Save the layer with the police intervention
-    mask_layer = np.zeros((*grid_size, 4))
-    mask_layer[mask] = [0, 1, 0, 1] # Set the color of the police intervention to red and set the transparency to 0.5
-    overlay_cax.set_data(mask_layer)
-    return cax, overlay_cax
+    # mask_layer = np.zeros((*grid_size, 4))
+    # mask_layer[mask] = [0, 1, 0, 1] # Set the color of the police intervention to red and set the transparency to 0.5
+    # overlay_cax.set_data(mask_layer)
+    return cax
 
 fig, ax = plt.subplots()
 cax = ax.imshow(criminality, cmap='plasma', vmin=0, vmax=1)
