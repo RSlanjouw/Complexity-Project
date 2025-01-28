@@ -9,12 +9,19 @@ class NewPlot():
         plt.rcParams['figure.figsize'] = (3.5,3.5)
         plt.rcParams['figure.dpi'] = 300
         self.fig, self.ax = plt.subplots()
-    
-    def add_plot(self, x, y, log=False, ci_max = [], ci_min = []):
-        if log:
-            self.ax.loglog(x, y)
+
+    def set_logscale(self, x=False, y=False):
+        if x:
+            self.ax.set_xscale("log")
         else:
-            self.ax.plot(x, y)
+            self.ax.set_xscale("linear")
+        if y:
+            self.ax.set_yscale("log")
+        else:
+            self.ax.set_yscale("linear")
+    
+    def add_plot(self, x, y, ci_max = [], ci_min = []):
+        self.ax.plot(x, y)
         if not ((len(ci_max)==0) or (len(ci_min) == 0)):
             self.ax.fill_between(x, ci_min, ci_max, alpha=.3)
 
@@ -24,18 +31,35 @@ class NewPlot():
     def add_title(self, title):
         self.ax.set_title(f"{title}")
 
-    def add_labels(self, x, y):
+    def add_labels(self, x="", y=""):
         self.ax.set_xlabel(f"{x}")
         self.ax.set_ylabel(f"{y}")
 
+    def set_ticks(self, xticks=[], yticks=[]):
+        if not len(xticks) == 0:
+            self.ax.set_xticks(xticks)
+        if not len(yticks) == 0:
+            self.ax.set_yticks(yticks)
+
+    def set_limits(self, xlim= [], ylim=[]):
+        if not len(xlim) == 0:
+            self.ax.set_xlim(xlim)
+        if not len(ylim) == 0:
+            self.ax.set_ylim(ylim)
+
+
     def save(self, name):
+        plt.tight_layout()
         plt.savefig(f"figures/{name}")
 
 if __name__ == "__main__":
     plot = NewPlot()
-    plot.add_plot(b, b, log=True, ci_max=b+.5, ci_min=b-.5)
-    plot.add_plot(b, b+1, log=True)
-    plot.add_plot(b, b+2, log=True)
+    plot.set_logscale(False, True)
+    plot.add_plot(b, b,  ci_max=b+.5, ci_min=b-.5)
+    plot.add_plot(b, b+1)
+    plot.add_plot(b, b+2)
+    plot.set_limits([0,10], [1,7])
+    plot.set_ticks([1,2,4,5], yticks=[1,2,5])
     plot.add_title("title")
     plot.add_labels("x", "y")
     plot.save("test")
