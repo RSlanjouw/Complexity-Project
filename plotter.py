@@ -8,6 +8,9 @@ class NewPlot():
         plt.style.use("seaborn-v0_8-colorblind")
         plt.rcParams['figure.figsize'] = (3.5,3.5)
         plt.rcParams['figure.dpi'] = 300
+        plt.rcParams['lines.linewidth'] = 2
+        plt.rcParams['axes.titlesize'] = 12
+        plt.rcParams['axes.labelsize'] = 9
         self.fig, self.ax = plt.subplots()
 
     def set_logscale(self, x=False, y=False):
