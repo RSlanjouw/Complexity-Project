@@ -1,5 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
+from plotter import NewPlot
 
 from modules.grid_update import update_grid_nopolice,update_grid_withpolice, giant_component
 
@@ -16,7 +17,7 @@ def simulate_emergence_if(grid_size=(50, 50), timesteps=70, alpha=0.3, influence
     income = np.random.rand(*grid_size)
 
     for i in range(amount_of_runs):
-        print(f"Simulation {i+1}/30")
+        print(f"Simulation {i+1}/{amount_of_runs}")
         giant_fractions = []
         for influence_diff in influence_diff_list:
             criminality = init_criminality
@@ -35,11 +36,11 @@ def simulate_emergence_if(grid_size=(50, 50), timesteps=70, alpha=0.3, influence
         np.save(f'averages_giant_fractions_if.npy', average_giant_fraction)
     average_giant_fractions = np.mean(average_giant_fractions, axis=0)
 
-    plt.plot(influence_diff_list, average_giant_fractions)
-    plt.title('Emergence of Giant Component')
-    plt.xlabel('Difference in Influence')
-    plt.ylabel('Fraction of Giant Component')
-    plt.savefig('figs/emergence.png')
+    plot = NewPlot()
+    plot.add_plot(influence_diff_list, average_giant_fractions)
+    plot.add_title('Emergence of Giant Component')
+    plot.add_labels('Difference in Influence','Fraction of Giant Component')
+    plot.save('emergence.png')
 
 # giant_component_for_different_alpha
 def simulate_emergence_a(grid_size=(30, 30), timesteps=70, alpha_l=(0,1), influence_diff=0, 
@@ -73,12 +74,13 @@ def simulate_emergence_a(grid_size=(30, 30), timesteps=70, alpha_l=(0,1), influe
         np.save(f'averages_giant_fractions_alpha_fluct.npy', average_giant_fractions)
     average_giant_fractions = np.mean(average_giant_fractions, axis=0)
 
-    plt.plot(alpha_list, average_giant_fractions)
-    plt.title('Emergence of Giant Component')
-    plt.xlabel('Difference in Influence')
-    plt.ylabel('Fraction of Giant Component')
-    plt.savefig('figs/emergence.png')
+    plot = NewPlot()
+    plot.add_plot(alpha_list, average_giant_fractions)
+    plot.add_title('Emergence of Giant Component')
+    plot.add_labels('Difference in Influence', 'Fraction of Giant Component')
+    plot.save('emergence_alpha.png')
 
 
 
 simulate_emergence_if()
+simulate_emergence_a()
