@@ -50,7 +50,7 @@ class NewPlot():
 
     def save(self, name):
         plt.tight_layout()
-        plt.savefig(f"figures/{name}")
+        plt.savefig(f"figs/{name}")
 
 if __name__ == "__main__":
     plot = NewPlot()
