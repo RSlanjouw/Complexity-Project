@@ -9,10 +9,10 @@ def simulate_emergence_if(grid_size=(30, 30), timesteps=70, alpha=0.3,
                        redistribution_frac=0.7, police_units=15, num_simulation=30, title='Emergence'):
     
     beta = 1 - alpha
-    influence_diff_list = np.linspace(-beta / 2, beta / 2, 30)
+    influence_diff_list = np.linspace(-beta / 2, beta / 2, 15)
     print(influence_diff_list)
     all_giant_fractions = []
-    average_giant_fractions = []
+    average_giant_fractions_nop = []
 
     # Generate data for the case without police
     for i in range(num_simulation): # Repeat the simulation a few times to get an average curve for the emergence graph
@@ -27,13 +27,13 @@ def simulate_emergence_if(grid_size=(30, 30), timesteps=70, alpha=0.3,
         all_giant_fractions.append(giant_fractions) # Store the giant component sizes for every influence difference value
 
     all_giant_fractions = np.array(all_giant_fractions)
-    average_giant_fractions = np.mean(all_giant_fractions, axis=0) # Compute the average giant component size for every influence difference value
+    average_giant_fractions_nop = np.mean(all_giant_fractions, axis=0) # Compute the average giant component size for every influence difference value
     std_err = sem(all_giant_fractions, axis=0) # Compute the standard error of the mean for every influence difference value
     error_margin = std_err * t.ppf((1 + 0.95) / 2, num_simulation - 1) # Compute the error margin for the confidence interval
 
     # Plot the size of the giant component after the fixed amount of timesteps (and a fixed threshold) for every influence difference value (with 95% CI)
-    plt.plot(influence_diff_list, average_giant_fractions, color = 'b', label = 'Giant Component size without police')
-    plt.fill_between(influence_diff_list, average_giant_fractions - error_margin, average_giant_fractions + error_margin, color = 'b', alpha = 0.2)
+    plt.plot(influence_diff_list, average_giant_fractions_nop, color = 'b', label = 'Giant Component size without police')
+    plt.fill_between(influence_diff_list, average_giant_fractions_nop - error_margin, average_giant_fractions_nop + error_margin, color = 'b', alpha = 0.2)
 
     # Generate data for the case with police
     police_threshold = 0.6 # Set the threshold of criminality for police intervention
@@ -42,7 +42,7 @@ def simulate_emergence_if(grid_size=(30, 30), timesteps=70, alpha=0.3,
     police_units = 40 # Define the number of available police units
 
     all_giant_fractions = []
-    average_giant_fractions = []
+    average_giant_fractions_withp = []
 
     for i in range(num_simulation): # Repeat the simulation a few times to get an average curve for the emergence graph
         giant_fractions = []
@@ -56,13 +56,13 @@ def simulate_emergence_if(grid_size=(30, 30), timesteps=70, alpha=0.3,
         all_giant_fractions.append(giant_fractions) # Store the giant component sizes for every influence difference value
 
     all_giant_fractions = np.array(all_giant_fractions)
-    average_giant_fractions = np.mean(all_giant_fractions, axis=0) # Compute the average giant component size for every influence difference value
+    average_giant_fractions_withp = np.mean(all_giant_fractions, axis=0) # Compute the average giant component size for every influence difference value
     std_err = sem(all_giant_fractions, axis=0) # Compute the standard error of the mean for every influence difference value
     error_margin = std_err * t.ppf(1.95 / 2, num_simulation - 1) # Compute the error margin for the confidence interval
 
     # Plot the size of the giant component after the fixed amount of timesteps (and a fixed threshold) for every influence difference value (with 95% CI)
-    plt.plot(influence_diff_list, average_giant_fractions, color = 'r', label = 'Giant Component size with police')
-    plt.fill_between(influence_diff_list, average_giant_fractions - error_margin, average_giant_fractions + error_margin, color = 'r', alpha = 0.2)
+    plt.plot(influence_diff_list, average_giant_fractions_withp, color = 'r', label = 'Giant Component size with police')
+    plt.fill_between(influence_diff_list, average_giant_fractions_withp - error_margin, average_giant_fractions_withp + error_margin, color = 'r', alpha = 0.2)
     plt.title('Emergence of Giant Component')
     plt.xlabel('Difference in Influence')
     plt.ylabel('Fraction of Giant Component')
@@ -71,41 +71,36 @@ def simulate_emergence_if(grid_size=(30, 30), timesteps=70, alpha=0.3,
                             wrap=True, horizontalalignment='center', fontsize=9)
     plt.legend()
     plt.savefig(f'figs/{title}.png')
+    plt.show()
 
-# giant_component_for_different_alpha
-def simulate_emergence_a(grid_size=(30, 30), timesteps=70, alpha_l=(0,1), influence_diff=0, 
+    return average_giant_fractions_nop, average_giant_fractions_withp
+
+
+all_y_nop = []
+all_y_withp = []
+side_size = [30, 50, 70, 90]
+
+for L in side_size:
+
+    alpha = 0.3
+    beta = 1 - alpha
+
+    avg_nop, avg_withp = simulate_emergence_if(grid_size=(L, L), timesteps=70, alpha=alpha, 
                        percolation_threshold=0.5, police_threshold=0.7, police_effect=0.3, 
-                       redistribution_frac=0.7, police_units=15, police=False, amount_of_runs=1, title='Emergence of Giant Component', save_values=False):
-    np.random.seed(123)
-    alpha_list = np.linspace(alpha_l[0],alpha_l[1], 30)
-    average_giant_fractions = []
-    init_criminality = np.random.rand(*grid_size)
-    education = np.random.rand(*grid_size)
-    income = np.random.rand(*grid_size)
+                       redistribution_frac=0.7, police_units=30, num_simulation=30, title=f'Emergence_grid_{L}')
+    
+    influence_diff_list = np.linspace(-beta / 2, beta / 2, 15)
 
-    for i in range(amount_of_runs):
-        print(f"Simulation {i+1}/30")
-        giant_fractions = []
-        for alpha in alpha_list:
-            print(alpha)
-            beta = 1 - alpha
-            criminality = init_criminality
-            for ts in range(timesteps):
-                criminality = update_grid_withpolice(criminality, education, income, influence_diff, 
-                                                         police_threshold, police_effect, redistribution_frac, police_units, alpha, beta, grid_size)[0]
-            giant_fractions.append(giant_component(criminality, percolation_threshold))
-        average_giant_fractions.append(giant_fractions)
+    all_y_nop.append(avg_nop)
+    all_y_withp.append(avg_withp)
 
-    if save_values:
-        np.save(f'averages_giant_fractions_alpha_fluct.npy', average_giant_fractions)
-    average_giant_fractions = np.mean(average_giant_fractions, axis=0)
+for ind in range(len(side_size)):
+    plt.plot(influence_diff_list, all_y_nop[ind], label=f'No Police', color='b')
+    plt.plot(influence_diff_list, all_y_withp[ind], label=f'With Police', color='r')
 
-    plt.plot(alpha_list, average_giant_fractions)
-    plt.title('Emergence of Giant Component')
-    plt.xlabel('Difference in Influence')
-    plt.ylabel('Fraction of Giant Component')
-    plt.savefig('figs/emergence.png')
-
-
-
-simulate_emergence_if()
+plt.xlabel(r'Scaled Influence Difference $x L^{1/\nu}$')
+plt.ylabel(r'Scaled Giant Component $y L^{-\beta/\nu}$')
+plt.title('Data Collapse for Different Grid Sizes')
+plt.legend()
+plt.savefig('figs/Scaling_Collapse.png')
+plt.show()
