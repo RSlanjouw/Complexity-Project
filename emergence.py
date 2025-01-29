@@ -3,6 +3,7 @@ import matplotlib.pyplot as plt
 from plotter import NewPlot
 from itertools import product
 
+
 from modules.grid_update import update_grid_nopolice,update_grid_withpolice, giant_component
 
 def simulate_emergence_if(grid_size=(50, 50), timesteps=70, alpha=0.3, influence_diff_range=(-0.3, 0.5), 
@@ -126,6 +127,6 @@ def simulate_average_crime(grid_size=(50, 50), timesteps=100, alpha_range=(.1, .
     plot.save(f'average_criminality_alpha_{a_prime}.png')
 
 
-# simulate_emergence_if()
-# simulate_emergence_a()
 simulate_average_crime()
+simulate_emergence_if()
+simulate_emergence_a()
