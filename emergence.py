@@ -85,7 +85,7 @@ def simulate_average_crime(grid_size=(50, 50), timesteps=100, alpha_range=(.1, .
                            percolation_threshold=0.5, police_threshold=0.7, police_effect=0.3, redistribution_frac=0.7,
                            police_units=15, police=False, amount_of_runs=10, title='Emergence of Giant Component', save_values=False):
     n = 5
-    criminality_over_time = np.zeros((n*n, amount_of_runs, timesteps))
+    criminality_over_time = np.zeros((n*n, amount_of_runs, timesteps + 1))
     alphas = np.linspace(alpha_range[0], alpha_range[1], n)
     influence_diffs = np.linspace(influence_diff_range[0], influence_diff_range[1], n)
     iteration_parameters = np.array(list(product(alphas, influence_diffs))).round(3)
@@ -97,6 +97,7 @@ def simulate_average_crime(grid_size=(50, 50), timesteps=100, alpha_range=(.1, .
         print(f"Simulation {j+1}/{amount_of_runs}")
         criminality = init_criminality
         for i, (alpha, influence_diff) in enumerate(iteration_parameters):
+            criminality_over_time[i, j, 0] = np.mean(init_criminality)
             beta = 1 - alpha
             for t in range(timesteps):
                 if police:
@@ -104,7 +105,7 @@ def simulate_average_crime(grid_size=(50, 50), timesteps=100, alpha_range=(.1, .
                                                             police_threshold, police_effect, redistribution_frac, police_units, alpha=alpha, beta=beta, grid_size=grid_size)[0]
                 else:
                     criminality = update_grid_nopolice(criminality, education, income, influence_diff, alpha=alpha, beta=beta)
-                criminality_over_time[i, j, t] = np.mean(criminality)
+                criminality_over_time[i, j, t+1] = np.mean(criminality)
 
     plot = NewPlot()
     a_prime = np.inf
@@ -119,7 +120,7 @@ def simulate_average_crime(grid_size=(50, 50), timesteps=100, alpha_range=(.1, .
         a_prime = a
         min_ci = np.min(line, axis=0)
         max_ci = np.max(line, axis=0)
-        plot.add_plot(np.linspace(0, timesteps, timesteps), np.mean(line, axis=0), ci_max=max_ci, ci_min=min_ci, label=r"$\alpha$: {a}, id: {b}".format(a=a, b=b))
+        plot.add_plot(np.linspace(0, timesteps+1, timesteps + 1), np.mean(line, axis=0), ci_max=max_ci, ci_min=min_ci, label=r"$\alpha$: {a}, id: {b}".format(a=a, b=b))
     plot.add_title(r'Average criminality $\alpha$: {a}'.format(a=a_prime))
     plot.add_labels('Iteration', 'Average criminality')
     plot.set_logscale(False, True)
