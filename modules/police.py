@@ -1,7 +1,7 @@
 import numpy as np
 
 
-def police(criminality, police_threshold, police_effect, redistribution_frac, police_units, grid_size=(300,300)): # Apply police intervention to the criminality grid
+def police(criminality, police_threshold, police_effect, redistribution_frac, police_units, grid_size): # Apply police intervention to the criminality grid
 
     criminality_copy = criminality.copy()
     mask = np.zeros_like(criminality, dtype=bool) # Generate an equal grid to save location of police interventions to visualize later
