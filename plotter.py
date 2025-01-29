@@ -6,6 +6,7 @@ b = np.load("data/test.npy")
 class NewPlot():
     def __init__(self):
         plt.style.use("seaborn-v0_8-colorblind")
+        plt.rcParams['legend.fontsize'] = 8
         plt.rcParams['figure.figsize'] = (3.5,3.5)
         plt.rcParams['figure.dpi'] = 300
         plt.rcParams['lines.linewidth'] = 2
@@ -23,8 +24,10 @@ class NewPlot():
         else:
             self.ax.set_yscale("linear")
     
-    def add_plot(self, x, y, ci_max = [], ci_min = []):
-        self.ax.plot(x, y)
+    def add_plot(self, x, y, ci_max = [], ci_min = [], label=""):
+        self.ax.plot(x, y, label=f"{label}")
+        if label:
+            plt.legend()
         if not ((len(ci_max)==0) or (len(ci_min) == 0)):
             self.ax.fill_between(x, ci_min, ci_max, alpha=.3)
 
