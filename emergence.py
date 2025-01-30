@@ -6,7 +6,7 @@ from itertools import product
 
 from modules.grid_update import update_grid_nopolice,update_grid_withpolice, giant_component
 
-def simulate_emergence_if(grid_size=(50, 50), timesteps=70, alpha=0.3, influence_diff_range=(-0.3, 0.5), 
+def simulate_emergence_if(grid_size=(50, 50), timesteps=70, alpha=0.3, influence_diff_range=(-0.3, 2), 
                        percolation_threshold=0.5, police_threshold=0.7, police_effect=0.3, 
                        redistribution_frac=0.7, police_units=15, police=False, amount_of_runs=10, title='Emergence of Giant Component', save_values=False):
     # np.random.seed(123)
