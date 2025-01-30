@@ -13,7 +13,7 @@ def update_grid_nopolice(criminality, education, income, influence_diff, alpha=0
     
     current = criminality[..., np.newaxis]
     
-    more_mask = neighbors > current
+    more_mask = neighbors >= current
     less_mask = neighbors <= current
     sum_more = np.nansum(neighbors * more_mask, axis=2)
     count_more = np.nansum(more_mask, axis=2)
@@ -23,10 +23,21 @@ def update_grid_nopolice(criminality, education, income, influence_diff, alpha=0
     less_infl = np.divide(sum_less, count_less, out=np.zeros_like(sum_less), where=count_less!=0)
     # calculate gamma for each cell avr of income and education
     gamma = (income + education) / 2
-    w_more = beta * np.clip(1 - gamma, 0.1, 0.9) + influence_diff
+    # get the amount of influence from the current cell
+    w_more = (beta * np.clip(1 - gamma, 0.1, 0.9) + influence_diff) 
     w_less = beta/2 - influence_diff
-    new_crim = alpha*criminality + w_more*more_infl + w_less*less_infl
-    
+
+    m = w_more * more_infl
+    # if item in m is 0 then it is current
+    m = np.where(count_more == 0, criminality, m)
+
+    # if l is 0 then is is current
+    l = w_less * less_infl
+
+    # if count of less is 0 then is criminality
+    l = np.where(count_less == 0, criminality, l)
+
+    new_crim = alpha*criminality + m + l
     return np.clip(new_crim, 0, 1)
 
 
