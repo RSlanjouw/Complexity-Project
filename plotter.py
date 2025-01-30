@@ -10,10 +10,10 @@ class NewPlot():
         plt.style.use("seaborn-v0_8-colorblind")
         plt.rcParams['axes.prop_cycle'] = cycler('color',["#0d0786", "#facf28", "#cf4e72", "#ec7c4c", "#9b169f"])
         plt.rcParams['legend.fontsize'] = 8
-        plt.rcParams['figure.figsize'] = (3.5,3.5)
+        plt.rcParams['figure.figsize'] = (5,4)
         plt.rcParams['figure.dpi'] = 300
         plt.rcParams['lines.linewidth'] = 2
-        plt.rcParams['axes.titlesize'] = 12
+        plt.rcParams['axes.titlesize'] = 9
         plt.rcParams['axes.labelsize'] = 9
         plt.rcParams['axes.prop_cycle']
         self.fig, self.ax = plt.subplots()
@@ -28,12 +28,18 @@ class NewPlot():
         else:
             self.ax.set_yscale("linear")
     
-    def add_plot(self, x, y, ci_max = [], ci_min = [], label=""):
-        self.ax.plot(x, y, label=f"{label}")
+    def add_plot(self, x, y, ci_max = [], ci_min = [], label="", color=""):
+        if len(color) == 0:
+            line = self.ax.plot(x, y, label=f"{label}")
+            if not ((len(ci_max)==0) or (len(ci_min) == 0)):
+                self.ax.fill_between(x, ci_min, ci_max, alpha=.3)
+        else:
+            line = self.ax.plot(x, y, label=f"{label}", c=color)
+            if not ((len(ci_max)==0) or (len(ci_min) == 0)):
+                self.ax.fill_between(x, ci_min, ci_max, alpha=.3, color=color)
         if label:
             plt.legend()
-        if not ((len(ci_max)==0) or (len(ci_min) == 0)):
-            self.ax.fill_between(x, ci_min, ci_max, alpha=.3)
+        return line
 
     def show(self):
         plt.show()
@@ -61,6 +67,9 @@ class NewPlot():
     def save(self, name):
         plt.tight_layout()
         plt.savefig(f"figs/{name}")
+
+    def custom_legend(self, handles, labels):
+        plt.legend(handles, labels)
 
 if __name__ == "__main__":
     plot = NewPlot()

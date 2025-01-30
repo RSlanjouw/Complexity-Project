@@ -1,5 +1,5 @@
 import numpy as np
-import matplotlib.pyplot as plt
+from plotter import NewPlot
 
 from modules.emergence import simulate_emergence
 
@@ -18,7 +18,7 @@ police_effect = 0.55
 redistribution_frac = 0.1
 police_units = [70, 200, 400, 600]
 side_size = [30, 50, 70, 90]
-num_simulation = 30
+num_simulation = 15
 influence_diff_list = np.linspace(-beta / 2, beta / 2, 15)
 
 for ind, units in enumerate(police_units):
@@ -35,25 +35,22 @@ for ind, units in enumerate(police_units):
     all_err_withp.append(err_withp)
 
 handles, labels = [], []
-
+plot = NewPlot()
 for ind in range(len(police_units)):
 
     if ind == 0:
-        line1, = plt.plot(influence_diff_list, plot_avg_nop, label=f'No Police', color='b')
-        plt.fill_between(influence_diff_list, plot_avg_nop - plot_err_nop, plot_avg_nop + plot_err_nop, color = 'b', alpha = 0.2)
-    line2, = plt.plot(influence_diff_list, all_y_withp[ind], label=f'With Police', color='r')
-    plt.fill_between(influence_diff_list, all_y_withp[ind] - all_err_withp[ind], all_y_withp[ind] + all_err_withp[ind], color = 'r', alpha = 0.2)
+        line1, = plot.add_plot(influence_diff_list, plot_avg_nop, ci_min=plot_avg_nop - plot_err_nop, ci_max=plot_avg_nop + plot_err_nop, color="#0d0786")
+    line2, = plot.add_plot(influence_diff_list, all_y_withp[ind], ci_min=all_y_withp[ind] - all_err_withp[ind], ci_max=all_y_withp[ind] + all_err_withp[ind], label=f'With Police', color='#facf28')
 
     if ind == 0:
         handles.extend([line1, line2])
         labels.extend(["No Police", "With Police"])
 
-plt.xlabel('Difference in Influence')
-plt.ylabel('Fraction of Giant Component')
-plt.title('Joint Plot for Different Amounts of Police Units')
-plt.legend(handles, labels)
-plt.subplots_adjust(bottom=0.28)
-plt.figtext(0.5, 0.01, f'Emergence of the Giant component in a {side_size[0]}x{side_size[0]} grid (for the blue line). The cases with police are simulated on grids with side lentgh of {police_units} (red lines). Measurements are taken after {timesteps} timesteps and are averaged out {num_simulation} runs. The colored area around the line represents the 95% CI. Alpha is set to {alpha}; the connection threshold to {connection_threshold}; the police threshold (to take action) is set to {police_threshold}; the police effect to {police_effect} of which a fraction of {redistribution_frac} is redistributed to neighbours; the number of police units is {police_units}.',
-            wrap=True, horizontalalignment='center', fontsize=9)
-plt.savefig('figs/different_police_amounts_emergence.png')
-plt.show()
+plot.add_labels('Difference in Influence', 'Fraction of Giant Component')
+plot.add_title('Joint Plot for Different Amounts of Police Units')
+plot.custom_legend(handles, labels)
+# plt.subplots_adjust(bottom=0.28)
+# plt.figtext(0.5, 0.01, f'Emergence of the Giant component in a {side_size[0]}x{side_size[0]} grid (for the blue line). The cases with police are simulated on grids with side lentgh of {police_units} (red lines). Measurements are taken after {timesteps} timesteps and are averaged out {num_simulation} runs. The colored area around the line represents the 95% CI. Alpha is set to {alpha}; the connection threshold to {connection_threshold}; the police threshold (to take action) is set to {police_threshold}; the police effect to {police_effect} of which a fraction of {redistribution_frac} is redistributed to neighbours; the number of police units is {police_units}.',
+#             wrap=True, horizontalalignment='center', fontsize=9)
+plot.save('different_police_amounts_emergence.png')
+# plt.show()

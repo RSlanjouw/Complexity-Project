@@ -1,5 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
+from plotter import NewPlot
 
 from modules.emergence import simulate_emergence
 
@@ -33,17 +34,15 @@ for connection_threshold in connection_threshold_list: # Plot the emergence curv
     all_err_nop.append(err_nop)
 
 colors = ['b', 'g', 'r', 'c']
-
+plot = NewPlot()
 for ind, thr in enumerate(connection_threshold_list): 
-    plt.plot(influence_diff_list, all_y_nop[ind], label=f'Connect. thr. = {thr}', color=colors[ind])
-    plt.fill_between(influence_diff_list, all_y_nop[ind] - all_err_nop[ind], all_y_nop[ind] + all_err_nop[ind], color=colors[ind], alpha = 0.2)
+    plot.add_plot(influence_diff_list, all_y_nop[ind], label=f'Connect. thr. = {thr}', ci_min=all_y_nop[ind] - all_err_nop[ind], ci_max=all_y_nop[ind] + all_err_nop[ind])
 
-plt.xlabel('Difference in Influence')
-plt.ylabel('Fraction of Giant Component')
-plt.title('Emergence of Giant Component for Different Connection Thresholds')
-plt.legend()
-plt.subplots_adjust(bottom=0.28)
-plt.figtext(0.5, 0.01, f'Emergence of the Giant component in a {grid_size[0]}x{grid_size[1]} grid. Measurements are taken after {timesteps} timesteps and are averaged out {num_simulation} runs. The colored area around the line represents the 95% CI. Alpha is set to {alpha}; the police threshold (to take action) is set to {police_threshold}; the police effect to {police_effect} of which a fraction of {redistribution_frac} is redistributed to neighbours; the number of police units is {police_units}.',
-            wrap=True, horizontalalignment='center', fontsize=9)
-plt.savefig('figs/different_connection_thr.png')
-plt.show()
+plot.add_labels('Difference in Influence', 'Fraction of Giant Component')
+plot.add_title('Emergence of Giant Component for Different Connection Thresholds')
+# plt.legend()
+# plt.subplots_adjust(bottom=0.28)
+# plt.figtext(0.5, 0.01, f'Emergence of the Giant component in a {grid_size[0]}x{grid_size[1]} grid. Measurements are taken after {timesteps} timesteps and are averaged out {num_simulation} runs. The colored area around the line represents the 95% CI. Alpha is set to {alpha}; the police threshold (to take action) is set to {police_threshold}; the police effect to {police_effect} of which a fraction of {redistribution_frac} is redistributed to neighbours; the number of police units is {police_units}.',
+#             wrap=True, horizontalalignment='center', fontsize=9)
+plot.save('different_connection_thr.png')
+# plt.show()

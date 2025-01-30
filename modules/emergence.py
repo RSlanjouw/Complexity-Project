@@ -1,5 +1,5 @@
 import numpy as np
-import matplotlib.pyplot as plt
+from plotter import NewPlot
 from scipy.stats import sem, t
 
 from modules.grid_update import update_grid_nopolice, update_grid_withpolice, giant_component
@@ -11,10 +11,10 @@ def simulate_emergence(grid_size=(30, 30), timesteps=70, alpha=0.3,
     
     beta = 1 - alpha
     influence_diff_list = np.linspace(-beta / 2, beta / 2, 15) # Generate a list of influence differences (the x-axis of the plot)
-    print(influence_diff_list)
+    # print(influence_diff_list)
     all_giant_fractions = []
     average_giant_fractions_nop = []
-
+    plot = NewPlot()
     # Generate data for the case without police
     if not onlypolice:
         for i in range(num_simulation): # Repeat the simulation a few times to get an average curve for the emergence graph
@@ -34,8 +34,7 @@ def simulate_emergence(grid_size=(30, 30), timesteps=70, alpha=0.3,
         error_margin_nop = std_err * t.ppf((1 + 0.95) / 2, num_simulation - 1) # Compute the error margin for the confidence interval
 
         # Plot the size of the giant component after the fixed amount of timesteps (and a fixed threshold) for every influence difference value (with 95% CI)
-        plt.plot(influence_diff_list, average_giant_fractions_nop, color = 'b', label = 'Giant Component size without police')
-        plt.fill_between(influence_diff_list, average_giant_fractions_nop - error_margin_nop, average_giant_fractions_nop + error_margin_nop, color = 'b', alpha = 0.2)
+        plot.add_plot(influence_diff_list, average_giant_fractions_nop, ci_min=average_giant_fractions_nop - error_margin_nop, ci_max=average_giant_fractions_nop + error_margin_nop, label = 'Giant Component size without police')
     else:
         error_margin_nop = 0
 
@@ -61,28 +60,24 @@ def simulate_emergence(grid_size=(30, 30), timesteps=70, alpha=0.3,
         error_margin_withp = std_err * t.ppf(1.95 / 2, num_simulation - 1) # Compute the error margin for the confidence interval
 
         # Plot the size of the giant component after the fixed amount of timesteps (and a fixed threshold) for every influence difference value (with 95% CI)
-        plt.plot(influence_diff_list, average_giant_fractions_withp, color = 'r', label = 'Giant Component size with police')
-        plt.fill_between(influence_diff_list, average_giant_fractions_withp - error_margin_withp, average_giant_fractions_withp + error_margin_withp, color = 'r', alpha = 0.2)
+        plot.add_plot(influence_diff_list, average_giant_fractions_withp, ci_min=average_giant_fractions_withp - error_margin_withp, ci_max=average_giant_fractions_withp + error_margin_withp, label = 'Giant Component size with police')
     else:
         error_margin_withp = 0
         average_giant_fractions_withp = 0
 
-    plt.title('Emergence of Giant Component')
-    plt.xlabel('Difference in Influence')
-    plt.ylabel('Fraction of Giant Component')
-    plt.subplots_adjust(bottom=0.28)
+    plot.add_title('Emergence of Giant Component')
+    plot.add_labels('Difference in Influence', 'Fraction of Giant Component')
 
-    if police:
-        plt.figtext(0.5, 0.01, f'Emergence of the Giant component in a {grid_size[0]}x{grid_size[1]} grid. Measurements are taken after {timesteps} timesteps and are averaged out {num_simulation} runs. The colored area around the line represents the 95% CI. Alpha is set to {alpha}; the connection threshold to {connection_threshold}; the police threshold (to take action) is set to {police_threshold}; the police effect to {police_effect} of which a fraction of {redistribution_frac} is redistributed to neighbours; the number of police units is {police_units}.',
-                    wrap=True, horizontalalignment='center', fontsize=9)
-    else:
-        plt.figtext(0.5, 0.01, f'Emergence of the Giant component in a {grid_size[0]}x{grid_size[1]} grid. Measurements are taken after {timesteps} timesteps and are averaged out {num_simulation} runs. The colored area around the line represents the 95% CI. Alpha is set to {alpha}; the connection threshold to {connection_threshold}. No police intervention is considered.',
-                    wrap=True, horizontalalignment='center', fontsize=9)
+    # if police:
+    #     plt.figtext(0.5, 0.01, f'Emergence of the Giant component in a {grid_size[0]}x{grid_size[1]} grid. Measurements are taken after {timesteps} timesteps and are averaged out {num_simulation} runs. The colored area around the line represents the 95% CI. Alpha is set to {alpha}; the connection threshold to {connection_threshold}; the police threshold (to take action) is set to {police_threshold}; the police effect to {police_effect} of which a fraction of {redistribution_frac} is redistributed to neighbours; the number of police units is {police_units}.',
+    #                 wrap=True, horizontalalignment='center', fontsize=9)
+    # else:
+    #     plt.figtext(0.5, 0.01, f'Emergence of the Giant component in a {grid_size[0]}x{grid_size[1]} grid. Measurements are taken after {timesteps} timesteps and are averaged out {num_simulation} runs. The colored area around the line represents the 95% CI. Alpha is set to {alpha}; the connection threshold to {connection_threshold}. No police intervention is considered.',
+    #                 wrap=True, horizontalalignment='center', fontsize=9)
                 
-    plt.legend()
+    # plt.legend()
 
     if savefig:
-        plt.savefig(f'figs/{title}.png')
-    plt.show()
-
+        plot.save(f'{title}.png')
+    # plot.show()
     return average_giant_fractions_nop, average_giant_fractions_withp, error_margin_nop, error_margin_withp
