@@ -115,7 +115,7 @@ def simulate_average_crime(grid_size=(50, 50), timesteps=100, alpha_range=(.1, .
         if a != a_prime and i != 0:
             plot.add_title(r'Average criminality $\alpha$: {a}'.format(a=a_prime))
             plot.add_labels('Iteration', 'Average criminality')
-            plot.set_logscale(False, True)
+            plot.set_logscale(False, False)
             plot.save(f'average_criminality_alpha_{a_prime}.png')
             plot = NewPlot()
         a_prime = a
@@ -124,10 +124,10 @@ def simulate_average_crime(grid_size=(50, 50), timesteps=100, alpha_range=(.1, .
         plot.add_plot(np.linspace(0, timesteps+1, timesteps + 1), np.mean(line, axis=0), ci_max=max_ci, ci_min=min_ci, label=r"$\alpha$: {a}, id: {b}".format(a=a, b=b))
     plot.add_title(r'Average criminality $\alpha$: {a}'.format(a=a_prime))
     plot.add_labels('Iteration', 'Average criminality')
-    plot.set_logscale(False, True)
+    plot.set_logscale(False, False)
     plot.save(f'average_criminality_alpha_{a_prime}.png')
 
 
-simulate_average_crime()
+simulate_average_crime(amount_of_runs=1)
 simulate_emergence_if()
 simulate_emergence_a()

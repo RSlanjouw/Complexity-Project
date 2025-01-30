@@ -15,11 +15,11 @@ def detect_avelanche(criminality, new_criminality, threshold): # Detect if an av
 
     return avalanche_sizes, labeled_avalanches
 
-def track_avalanches(criminality, education, income, influence_diff, time_steps, threshold):
+def track_avalanches(criminality, education, income, influence_diff, time_steps, threshold, alpha=0.3):
 
     all_avelanches_sizes = []
     for step in range(time_steps): # In each time step, update the grid and detect avelanches and their sizes
-        new_criminality = update_grid_nopolice(criminality, education, income, influence_diff)
+        new_criminality = update_grid_nopolice(criminality, education, income, influence_diff, alpha=alpha)
         avalanche_sizes, labeled_avalanches = detect_avelanche(criminality, new_criminality, threshold)
         all_avelanches_sizes.extend(avalanche_sizes)
         criminality = new_criminality.copy()

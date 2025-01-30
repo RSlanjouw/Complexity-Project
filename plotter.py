@@ -1,6 +1,5 @@
 import numpy as np
 import matplotlib.pyplot as plt
-from itertools import cycle 
 from matplotlib import cycler
 
 b = np.load("data/test.npy")
