@@ -1,17 +1,21 @@
 import numpy as np
 import matplotlib.pyplot as plt
+from itertools import cycle 
+from matplotlib import cycler
 
 b = np.load("data/test.npy")
 
 class NewPlot():
     def __init__(self):
         plt.style.use("seaborn-v0_8-colorblind")
+        plt.rcParams['axes.prop_cycle'] = cycler('color',["#0d0786", "#facf28", "#cf4e72", "#ec7c4c", "#9b169f"])
         plt.rcParams['legend.fontsize'] = 8
         plt.rcParams['figure.figsize'] = (3.5,3.5)
         plt.rcParams['figure.dpi'] = 300
         plt.rcParams['lines.linewidth'] = 2
         plt.rcParams['axes.titlesize'] = 12
         plt.rcParams['axes.labelsize'] = 9
+        plt.rcParams['axes.prop_cycle']
         self.fig, self.ax = plt.subplots()
 
     def set_logscale(self, x=False, y=False):
