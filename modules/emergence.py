@@ -6,7 +6,7 @@ from modules.grid_update import update_grid_nopolice, update_grid_withpolice, gi
 
 
 def simulate_emergence(grid_size=(30, 30), timesteps=70, alpha=0.3, 
-                       percolation_threshold=0.5, police_threshold=0.7, police_effect=0.3, 
+                       connection_threshold=0.5, police_threshold=0.7, police_effect=0.3, 
                        redistribution_frac=0.7, police_units=15, num_simulation=30, title='Emergence', police=True, onlypolice=False, savefig=True): # Function to plot emergence of giant component for different influence differences
     
     beta = 1 - alpha
@@ -25,7 +25,7 @@ def simulate_emergence(grid_size=(30, 30), timesteps=70, alpha=0.3,
                 income = np.random.rand(*grid_size) # Reset the income grid
                 for _ in range(timesteps): # Run the simulation for a long enough time
                     criminality = update_grid_nopolice(criminality, education, income, influence_diff, alpha, beta)
-                giant_fractions.append(giant_component(criminality, percolation_threshold)) # Get the size of the giant component
+                giant_fractions.append(giant_component(criminality, connection_threshold)) # Get the size of the giant component
             all_giant_fractions.append(giant_fractions) # Store the giant component sizes for every influence difference value
 
         all_giant_fractions = np.array(all_giant_fractions)
@@ -52,7 +52,7 @@ def simulate_emergence(grid_size=(30, 30), timesteps=70, alpha=0.3,
                 income = np.random.rand(*grid_size) # Reset the income grid
                 for _ in range(timesteps): # Run the simulation for a long enough time
                     criminality = update_grid_withpolice(criminality, education, income, influence_diff, police_threshold, police_effect, redistribution_frac, police_units, grid_size, alpha, beta)[0]
-                giant_fractions.append(giant_component(criminality, percolation_threshold)) # Get the size of the giant component
+                giant_fractions.append(giant_component(criminality, connection_threshold)) # Get the size of the giant component
             all_giant_fractions.append(giant_fractions) # Store the giant component sizes for every influence difference value
 
         all_giant_fractions = np.array(all_giant_fractions)
@@ -73,10 +73,10 @@ def simulate_emergence(grid_size=(30, 30), timesteps=70, alpha=0.3,
     plt.subplots_adjust(bottom=0.28)
 
     if police:
-        plt.figtext(0.5, 0.01, f'Emergence of the Giant component in a {grid_size[0]}x{grid_size[1]} grid. Measurements are taken after {timesteps} timesteps and are averaged out {num_simulation} runs. The colored area around the line represents the 95% CI. Alpha is set to {alpha}; the percolation threshold to {percolation_threshold}; the police threshold (to take action) is set to {police_threshold}; the police effect to {police_effect} of which a fraction of {redistribution_frac} is redistributed to neighbours; the number of police units is {police_units}.',
+        plt.figtext(0.5, 0.01, f'Emergence of the Giant component in a {grid_size[0]}x{grid_size[1]} grid. Measurements are taken after {timesteps} timesteps and are averaged out {num_simulation} runs. The colored area around the line represents the 95% CI. Alpha is set to {alpha}; the connection threshold to {connection_threshold}; the police threshold (to take action) is set to {police_threshold}; the police effect to {police_effect} of which a fraction of {redistribution_frac} is redistributed to neighbours; the number of police units is {police_units}.',
                     wrap=True, horizontalalignment='center', fontsize=9)
     else:
-        plt.figtext(0.5, 0.01, f'Emergence of the Giant component in a {grid_size[0]}x{grid_size[1]} grid. Measurements are taken after {timesteps} timesteps and are averaged out {num_simulation} runs. The colored area around the line represents the 95% CI. Alpha is set to {alpha}; the percolation threshold to {percolation_threshold}. No police intervention is considered.',
+        plt.figtext(0.5, 0.01, f'Emergence of the Giant component in a {grid_size[0]}x{grid_size[1]} grid. Measurements are taken after {timesteps} timesteps and are averaged out {num_simulation} runs. The colored area around the line represents the 95% CI. Alpha is set to {alpha}; the connection threshold to {connection_threshold}. No police intervention is considered.',
                     wrap=True, horizontalalignment='center', fontsize=9)
                 
     plt.legend()
