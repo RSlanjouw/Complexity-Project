@@ -29,13 +29,13 @@ def update_grid_nopolice(criminality, education, income, influence_diff, alpha, 
 
     m = w_more * more_infl
     # if item in m is 0 then it is current
-    m = np.where(count_more == 0, criminality, m)
+    m = np.where(count_less == 0, m*2, m)
 
     # if l is 0 then is is current
     l = w_less * less_infl
 
     # if count of less is 0 then is criminality
-    l = np.where(count_less == 0, criminality, l)
+    l = np.where(count_more == 0, l*2, l)
 
     new_crim = alpha*criminality + m + l
     return np.clip(new_crim, 0, 1)

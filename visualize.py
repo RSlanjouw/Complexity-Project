@@ -7,7 +7,7 @@ from scipy.ndimage import label
 from modules.grid_update import update_grid_withpolice, update_grid_nopolice
 # Define parameters
 
-grid_size = (100, 100)
+grid_size = (50, 50)
 np.random.seed(1)
 criminality = np.random.rand(*grid_size) # Define the initial criminality for every cell
 education = np.random.rand(*grid_size) # Define the education for every cell (here fixed, but can be linked to data in final model)
@@ -16,12 +16,12 @@ income = np.random.rand(*grid_size) # Define the income for every cell (here fix
 # income = np.full(grid_size, 0.5) # Define the income for every cell with a fixed value of 0.5
 alpha = 0.3 # Assign weight for influence of criminality in own neighbourhood
 beta = 1 - alpha # Assign weight for influence of criminality in other neighbourhoods 
-influence_diff = 0.1 # Assign weight for difference in influence of "bad" neighbourhoods compared to "good" neighbourhoods
+influence_diff = 0 # Assign weight for difference in influence of "bad" neighbourhoods compared to "good" neighbourhoods
 percolation_threshold = 0.5 # Define the percolation threshold to later calculate the giant component
 police_threshold = 0.8 # Set the threshold of criminality for police intervention
 police_effect = 0.3 # Decide by how much criminality is reduced in a cell when police acts
 redistribution_frac = 0.7 # Decide how much of the criminality is redistributed to neighbouring cells
-police_units = 15 # Define the number of available police units
+police_units = 2 # Define the number of available police units
 
 
 
