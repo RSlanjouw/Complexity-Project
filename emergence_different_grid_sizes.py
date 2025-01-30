@@ -15,10 +15,10 @@ alpha = 0.3
 beta = 1 - alpha
 timesteps = 70
 percolation_threshold = 0.5
-police_threshold = 0.7
-police_effect = 0.3, 
-redistribution_frac = 0.7
-police_units = 30
+police_threshold = 0.6
+police_effect = 0.5
+redistribution_frac = 0.3
+police_units = 70
 num_simulation = 30
 influence_diff_list = np.linspace(-beta / 2, beta / 2, 15)
 

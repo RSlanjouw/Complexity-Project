@@ -41,11 +41,6 @@ def simulate_emergence(grid_size=(30, 30), timesteps=70, alpha=0.3,
 
     # Generate data for the case with police
     if police:
-        police_threshold = 0.6 # Set the threshold of criminality for police intervention
-        police_effect = 0.45 # Decide by how much criminality is reduced in a cell when police acts
-        redistribution_frac = 0.01 # Decide how much of the criminality is redistributed to neighbouring cells
-        police_units = 40 # Define the number of available police units
-
         all_giant_fractions = []
         average_giant_fractions_withp = []
 
@@ -68,6 +63,9 @@ def simulate_emergence(grid_size=(30, 30), timesteps=70, alpha=0.3,
         # Plot the size of the giant component after the fixed amount of timesteps (and a fixed threshold) for every influence difference value (with 95% CI)
         plt.plot(influence_diff_list, average_giant_fractions_withp, color = 'r', label = 'Giant Component size with police')
         plt.fill_between(influence_diff_list, average_giant_fractions_withp - error_margin_withp, average_giant_fractions_withp + error_margin_withp, color = 'r', alpha = 0.2)
+    else:
+        error_margin_withp = 0
+        average_giant_fractions_withp = 0
 
     plt.title('Emergence of Giant Component')
     plt.xlabel('Difference in Influence')
@@ -85,6 +83,6 @@ def simulate_emergence(grid_size=(30, 30), timesteps=70, alpha=0.3,
 
     if savefig:
         plt.savefig(f'figs/{title}.png')
-        plt.show()
+    plt.show()
 
     return average_giant_fractions_nop, average_giant_fractions_withp, error_margin_nop, error_margin_withp

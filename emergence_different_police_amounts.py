@@ -14,9 +14,9 @@ beta = 1 - alpha
 timesteps = 70
 percolation_threshold = 0.5
 police_threshold = 0.7
-police_effect = 0.3, 
+police_effect = 0.3 
 redistribution_frac = 0.7
-police_units = [100, 1000, 3000, 5000]
+police_units = [30, 100, 200, 300]
 side_size = [30, 50, 70, 90]
 num_simulation = 30
 influence_diff_list = np.linspace(-beta / 2, beta / 2, 15)
@@ -54,6 +54,6 @@ plt.title('Data Collapse for Different Amounts of Police Units')
 plt.legend(handles, labels)
 plt.subplots_adjust(bottom=0.28)
 plt.figtext(0.5, 0.01, f'Emergence of the Giant component in a {side_size[0]}x{side_size[0]} grid (for the blue line). The cases with police are simulated on grids with side lentgh of {police_units} (red lines). Measurements are taken after {timesteps} timesteps and are averaged out {num_simulation} runs. The colored area around the line represents the 95% CI. Alpha is set to {alpha}; the percolation threshold to {percolation_threshold}; the police threshold (to take action) is set to {police_threshold}; the police effect to {police_effect} of which a fraction of {redistribution_frac} is redistributed to neighbours; the number of police units is {police_units}.',
-                            wrap=True, horizontalalignment='center', fontsize=9)
+            wrap=True, horizontalalignment='center', fontsize=9)
 plt.savefig('figs/different_police_amounts_emergence.png')
 plt.show()
