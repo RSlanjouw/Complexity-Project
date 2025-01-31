@@ -1,8 +1,6 @@
-import numpy as np
+# Wrapper for matplotlib to get consistent looking figures
 import matplotlib.pyplot as plt
 from matplotlib import cycler
-
-b = np.load("data/test.npy")
 
 class NewPlot():
     def __init__(self):
@@ -28,6 +26,7 @@ class NewPlot():
             self.ax.set_yscale("linear")
     
     def add_plot(self, x, y, ci_max = [], ci_min = [], label="", color=""):
+        # Add plot with confidence interval if needed
         if len(color) == 0:
             line = self.ax.plot(x, y, label=f"{label}")
             if not ((len(ci_max)==0) or (len(ci_min) == 0)):
