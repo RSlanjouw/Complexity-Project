@@ -6,7 +6,7 @@ from IPython.display import HTML
 from scipy.ndimage import label
 
 from modules.grid_update import update_grid_withpolice, update_grid_nopolice
-from test_files.grids import grid1
+# from test_files.grids import grid1
 
 grid_len = 50
 grid_size = (grid_len, grid_len)
@@ -54,5 +54,6 @@ fig.colorbar(cax, ax=ax)
 ax.set_title('Criminality')
 timesteps = 100
 ani = FuncAnimation(fig, animate, frames=range(0,timesteps), interval=10, repeat = False)
+ani.save('window.gif')
 
 plt.show()

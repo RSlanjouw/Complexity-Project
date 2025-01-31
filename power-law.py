@@ -1,10 +1,10 @@
 import numpy as np
-from plotter import NewPlot
+from modules.plotter import NewPlot
 from modules.avelanches import track_avalanches
 
-side_lenght = [30, 50, 70, 90]
-time_steps = 40000
-threshold = 0.3
+side_lenght = [30, 50, 70, 90, 150]
+time_steps = 400000
+threshold = 0.05
 influence_diff = 0
 all_sizes = []
 all_frequencies = []
@@ -42,6 +42,7 @@ for sizes, frequencies, side in zip(all_sizes, all_frequencies, side_lenght):
 
 plot = NewPlot()
 for scaled_size, scaled_frequency, side in zip(scaled_sizes, scaled_frequencies, side_lenght):
+    print(scaled_size)
     plot.add_plot(scaled_size, scaled_frequency, label=f'{side}x{side}')
 
 plot.add_title('Data Collapse of Avalanche Size Distribution')
