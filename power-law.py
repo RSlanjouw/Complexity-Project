@@ -1,51 +1,44 @@
+import powerlaw
 import numpy as np
-from modules.plotter import NewPlot
+import matplotlib.pyplot as plt
 from modules.avelanches import track_avalanches
 
-side_lenght = [30, 50, 70, 90, 150]
-time_steps = 400000
-threshold = 0.05
-influence_diff = 0
-all_sizes = []
-all_frequencies = []
+grid_size = (100, 100)
+criminality = np.random.rand(*grid_size)
+education = np.random.rand(*grid_size)
+income = np.random.rand(*grid_size)
+alpha = 0.5
+beta = 1 - alpha
+influence_diff = 0.0
+threshold = 0.2
+side_lengths = [50, 100, 200]  
+time_steps = 2000
 
-for side in side_lenght:
+
+for side in side_lengths:
     grid_size = (side, side)
-    # Initialize the grids
+    
     criminality = np.random.rand(*grid_size)
     education = np.random.rand(*grid_size)
     income = np.random.rand(*grid_size)
+    
+    avalanche_sizes = track_avalanches(criminality, education, income, influence_diff, time_steps, threshold)
+    
+    sizes, counts = np.unique(avalanche_sizes, return_counts=True)
+    frequencies = counts / np.sum(counts)
 
-    all_avelanches_sizes = track_avalanches(criminality, education, income, influence_diff, time_steps, threshold, alpha=0.5) # Track all the avelancehs events and their sizes
-    sizes, counts = np.unique(all_avelanches_sizes, return_counts=True) # Extract the size and number of events per size
-    frequencies = counts / np.sum(counts) # Compute the frequency of each size
+    results = powerlaw.Fit(avalanche_sizes)
 
-    all_sizes.append(sizes)
-    all_frequencies.append(frequencies)
+    print(f'Alpha for {side}x{side}: {results.alpha}')
+    print(f'Xmin for {side}x{side}: {results.xmin}')
+    print(f"KS p-value for power law in {side}x{side}: {results.power_law.KS()}")
+    plt.plot(sizes, frequencies, 'o-', label=f'{side}x{side}')
 
-    plot = NewPlot()
-    plot.add_plot(sizes, frequencies)
-    plot.set_logscale(True, True)
-    plot.add_title(f'Avalanche Size Distribution on a {side}x{side} grid')
-    plot.add_labels('Size of Avalanche', 'Frequency')
-    plot.save(f'power_law_{side}')
-
-
-scaled_sizes = []
-scaled_frequencies = []
-D = 0.1
-tau = 0.8
-
-for sizes, frequencies, side in zip(all_sizes, all_frequencies, side_lenght):
-    scaled_sizes.append(sizes / (side ** D))
-    scaled_frequencies.append(frequencies * (side ** tau))
-
-plot = NewPlot()
-for scaled_size, scaled_frequency, side in zip(scaled_sizes, scaled_frequencies, side_lenght):
-    print(scaled_size)
-    plot.add_plot(scaled_size, scaled_frequency, label=f'{side}x{side}')
-
-plot.add_title('Data Collapse of Avalanche Size Distribution')
-plot.add_labels('Scaled Avelanche Size (s / L^D)', 'Scaled Frequency (P(s) * L^tau)')
-plot.set_logscale(True, True)
-plot.save("Data Collapse")
+plt.yscale('log')
+plt.xscale('log')
+plt.title('Powerlaw Plot for Different Grid Sizes')
+plt.xlabel('Size of Avalanche')
+plt.ylabel('Frequency')
+plt.legend()
+plt.grid(True, which="both", ls="--")
+plt.show()
