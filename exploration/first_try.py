@@ -153,9 +153,9 @@ def timesteps(map, num_timesteps, n, p):
         plt.axis("square")
         plt.axis('off')
         plt.colorbar()
-        plt.draw()           # update grafiek
+        plt.draw()     
         plt.pause(0.1)
-        plt.clf()            # clear grafiek
+        plt.clf()            
     plt.show()
 
 map = Map(100, 100)

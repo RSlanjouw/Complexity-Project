@@ -1,4 +1,7 @@
-# Make a visualization representing the broken window theory.
+# BY: Bonnie and Cellulair Automata
+# FOR: Complex System Simulation
+# PURPOSE: Make a visualization representing the broken window theory.
+
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.animation import FuncAnimation

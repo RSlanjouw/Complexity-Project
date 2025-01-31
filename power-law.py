@@ -1,12 +1,12 @@
+# BY: Bonnie and Cellulair Automata
+# FOR: Complex System Simulation
+# PURPOSE: To disprove the power law in the system
+
 import powerlaw
 import numpy as np
 import matplotlib.pyplot as plt
 from modules.avelanches import track_avalanches
 
-grid_size = (100, 100)
-criminality = np.random.rand(*grid_size)
-education = np.random.rand(*grid_size)
-income = np.random.rand(*grid_size)
 alpha = 0.5
 beta = 1 - alpha
 influence_diff = 0.0

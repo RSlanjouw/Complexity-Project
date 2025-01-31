@@ -1,4 +1,7 @@
-# Animate the model on a random grid.
+# BY: Bonnie and Cellulair Automata
+# FOR: Complex System Simulation
+# PURPOSE: To animate the model on a random grid.
+
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.animation import FuncAnimation
@@ -21,8 +24,6 @@ police_threshold = 0.8
 police_effect = 0.3 
 redistribution_frac = 0.7 
 police_units = 2 
-
-
 
 def animate(t): 
     global criminality
