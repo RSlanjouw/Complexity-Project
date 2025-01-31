@@ -12,3 +12,9 @@ All files in the root are executables. In the modules function helper functions 
 
 ### Conclusions
 HIER CONCLUSIE!!!
+
+### Group Members
+Mika Doorenbosch
+Ruben Lanjouw
+Liesbet Ooghe
+Francesco Tiepolo
