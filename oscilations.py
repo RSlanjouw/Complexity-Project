@@ -1,3 +1,7 @@
+# BY: Bonnie and Cellulair Automata
+# FOR: Complex System Simulation
+# PURPOSE: To show the oscillations in the system
+
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.widgets import Slider
