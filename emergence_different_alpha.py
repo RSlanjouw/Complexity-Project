@@ -1,4 +1,7 @@
+# BY: Bonnie and Cellulair Automata
+# FOR: Complex System Simulation
 # Investigate emergence of GC by varying alpha
+
 import numpy as np
 from modules.plotter import NewPlot
 from modules.emergence import simulate_emergence

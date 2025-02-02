@@ -1,4 +1,7 @@
+# BY: Bonnie and Cellulair Automata
+# FOR: Complex System Simulation
 # Investigate the emergence of a GC by varying the threshold that connects two neighbors
+
 import numpy as np
 import matplotlib.pyplot as plt
 from modules.plotter import NewPlot

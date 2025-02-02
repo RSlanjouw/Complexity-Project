@@ -1,4 +1,7 @@
+# BY: Bonnie and Cellulair Automata
+# FOR: Complex System Simulation
 # Investigate the emergence of a GC by varying grid sizes
+
 import numpy as np
 from modules.plotter import NewPlot
 
